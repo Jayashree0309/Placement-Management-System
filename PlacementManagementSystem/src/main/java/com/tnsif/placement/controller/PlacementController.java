@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,8 @@ import com.tnsif.placement.entity.JobOpening;
 import com.tnsif.placement.repository.PlacementRepository;
 @RestController
 @RequestMapping("/jobopening")
+@CrossOrigin(origins ="http://localhost:4200")
+
 public class PlacementController {
 
 	@Autowired
@@ -36,31 +39,20 @@ public class PlacementController {
 		
 		
 	}
-	@GetMapping("/{id}")
-	public Optional<JobOpening> getJobOpeningById(@PathVariable Integer id) {
-		return repo.findById(id);
+	@GetMapping("/{jobId}")
+	public Optional<JobOpening> getJobOpeningById(@PathVariable Integer jobId) {
+		return repo.findById(jobId);
 	}
 	
-	@DeleteMapping("/{id}")
-	public String deleteJobOpening(@PathVariable Integer id) {
-		boolean delete=repo.existsById(id);
-		if(delete) {
-			repo.deleteById(id);
-			return "Successfully deleted";
-		}
-		return "Job Id does not exsist";
+	@DeleteMapping("/{jobId}")
+	public void deleteJobOpening(@PathVariable Integer jobId) {
+		repo.deleteById(jobId);
 	}
 	
-	@PutMapping("/{id}")
-	public String updateJobOpening(@PathVariable Integer id,@RequestBody JobOpening jb) {
-		boolean update=repo.existsById(id);
-		
-		if(update) {	
-			jb.setJobId(id);
-			repo.save(jb);
-			return "Updated Successfully";
-		}
-		return "Update failed";
+	@PutMapping("/{jobId}")
+	public JobOpening updateJobOpening(@PathVariable Integer jobId,@RequestBody JobOpening jb) {
+		jb.setJobId(jobId);
+		return repo.save(jb);
 	}
 
 }
